@@ -1,0 +1,104 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Shann's Blog</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="{% static 'blog/assets/js/ie/html5shiv.js' %}"></script><![endif]-->
+		<link rel="stylesheet" href="{% static 'blog/assets/css/main.css' %}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{% static 'blog/assets/css/ie9.css' %}"><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{% static 'blog/assets/css/ie8.css' %}"><![endif]-->
+		<link rel="stylesheet" href="{% static 'blog/assets/highlights/fruity.css' %}">
+
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="{% url 'blog:index' %}">Shann's Blog</a></h1>
+						<nav class="main">
+							<ul>
+								<li class="menu">
+									<a class="fa-bars" href="#menu">Menu</a>
+								</li>
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<section id="menu">
+
+						<!-- Search -->
+							<section id="selfintro">
+								 <div class="logo-inner text-center">
+		                            <div class="logo-name">
+		                                <a href="index.html">
+		                                    <img src="{% static 'blog/images/logo.jpg' %}" class="img-circle" />
+		                                </a>
+		                            </div>
+                       			 </div>
+								<header>
+									<h2>Shann</h2>
+								</header>
+								<form class="search" method="get" action="#">
+									<input type="text" name="query" placeholder="Search" />
+									<input type="submit" class="button big fit" value="Search">
+								</form>
+							</section>
+
+						<!-- Links -->
+							<section>
+								<ul class="links">
+									<li>
+										<a href="{% url 'blog:index' %}">
+											<h3>Home</h3>
+										</a>
+									</li>
+									<li>
+										<a href="{% url 'blog:index' %}">
+											<h3>Blog</h3>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3>About</h3>
+										</a>
+									</li>
+								</ul>
+							</section>
+
+						<!-- Actions -->
+							<section>
+								<ul class="actions vertical">
+									<li><a href="#" class="button big fit">Log In</a></li>
+								</ul>
+							</section>
+
+					</section>
+                    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >企业网站模板</a></div>
+					{% block main %}
+				<!-- Main -->
+					{% endblock main%}
+					
+			</div>
+			<section id="footer">
+								<ul class="icons">
+									<li><a href="#" class="fa-rss"><span class="label">RSS</span></a></li>
+									<li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+								</ul>
+								<p class="copyright">&copy; Untitled. More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>.</p>
+							</section>
+		<!-- Scripts -->
+			<script src="{% static 'blog/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'blog/assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'blog/assets/js/util.js' %}"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="{% static 'blog/assets/js/main.js' %}"></script>
+
+	</body>
+</html>
