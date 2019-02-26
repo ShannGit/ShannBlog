@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load blog_tags %}
+{% load highlight %}
+
+{% block main %}
+					<div id="main">
+						{% if query %}
+							{% for result in page.object_list %}
+						<!-- Post -->
+							<article class="post">
+								<header>
+									<div class="title">
+										<h2><a href="{{ result.object.get_absolute_url }}">{% highlight result.object.caption with query %}</a></h2>
+										<div class="widget widget-tag-cloud">
+					                    <ul>
+					                    	{% for tag in result.object.tag.all %}
+					                        <li>
+					                            <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+					                        </li>
+					                        {% empty %}
+					                        {% endfor%}
+					                    </ul>
+					                    </div>
+									</div>
+									<div class="meta">
+										<time class="published" datetime="{{ result.object.creattime|date:'Y-m-d H:i' }}">{{ result.object.creattime|date:"Y-m-d H:i" }}</time>
+										<a href="#" class="author"><span class="name">{{ result.object.author }}</span><img src="{% static 'blog/images/logo.jpg' %}" alt="" /></a>
+									</div>
+								</header>
+								<a href="{{ result.object.get_absolute_url }}" class="image featured"><img src="{% static 'blog/images/pic01.jpg' %}" alt="" /></a>
+								<p>{% highlight result.object.content with query %}</p>
+								<footer>
+									<ul class="actions">
+										<li><a href="{{ result.object.get_absolute_url }}" class="button big">Continue Reading</a></li>
+									</ul>
+									<ul class="stats">
+										<li><a href="{% url 'blog:category' result.object.category.pk %}">{{ result.object.category }}</a></li>
+										<li>{{ result.object.views }} 阅读</li>
+										<li><a href="#" class="icon fa-comment">{{ result.object.comments_set.count }}</a></li>
+									</ul>
+								</footer>
+							</article>
+							{% empty %}
+	  							<div class="no-post"><h2>没有搜索到你想要的结果!</h2></div>
+							{% endfor %}
+
+						<!-- Pagination -->
+							{% if page.has_pervious or page.has_next %}
+							<ul class="actions pagination">
+								{% if page.has_pervious %}
+								<li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}" class="button big previous">Previous Page</a></li>
+								{% else %}
+								<li><a href="#" class="disabled button big previous">Previous Page</a></li>
+								{% endif %}
+								{% if page.has_next %}
+								<li><a href="?q={{ query }}&amp;page={{ page.next_page_number }}" class="button big next">Next Page</a></li>
+								{% else %}
+								<li><a href="#" class="disabled button big next">Next Page</a></li>		
+								{% endif %}	
+							</ul>
+							{% endif %}
+						{% else %}
+							<div class="no-post"><h2>请输入搜索关键词!</h2></div>
+						{% endif %}
+
+						</div>
+
+				<!-- Sidebar -->
+					<section id="sidebar">
+
+						<!-- Intro -->
+							<section id="intro">
+								 <div class="logo-inner text-center">
+		                            <div class="logo-name">
+		                                <a href="index.html">
+		                                    <img src="{% static 'blog/images/logo.jpg' %}" class="img-circle" />
+		                                </a>
+		                            </div>
+                       			 </div>
+								<header>
+									<h2>Shann</h2>
+									<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. </p>
+								</header>
+							</section>
+
+						<!-- Rencent Posts -->
+							<section>
+								<div class="mini-posts">
+
+									<!-- Rencent Post -->
+										{% getrecentblogs as recentblogslist %}
+										{% for blog in recentblogslist %}
+											<article class="mini-post">
+												<header>
+													<h3><a href="{% url 'blog:detail' blog.pk %}">{{ blog.caption }}</a></h3>
+													<time class="published" datetime="2015-10-20">{{ blog.creattime|date:"Y-m-d H:i" }}</time>
+													<a href="#" class="author"><img src="{% static 'blog/images/avatar.jpg' %}" alt="" /></a>
+												</header>
+												<a href="{% url 'blog:detail' blog.pk %}" class="image"><img src="{% static 'blog/images/pic01.jpg' %}" alt="" /></a>
+											</article>
+										{% empty %}
+										暂无文章！
+										{% endfor %}
+
+								</div>
+							</section>
+
+						<!-- Catetory List -->
+						<!-- <SCRIPT language=JavaScript>function MM_jumpMenu(targ,selObj,restore){  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");  if (restore) selObj.selectedIndex=0;}</SCRIPT>
+							<section>
+								<h2>分类</h2>
+								<div class="select-wrapper">
+									<select name="demo-category" id="demo-category" onchange="MM_jumpMenu('parent',this,0)">
+										<OPTION selected>文章分类</OPTION> 
+										{% getcategory as categoryslist %}
+										{% for category in categoryslist %}
+											<option value="{% url 'blog:category' category.pk %}">{{ category.name }}</option>
+										{% empty %}
+										暂无分类！
+										{% endfor %}
+									</select>
+								</div>
+							</section> -->
+							<section>
+								<ul class="posts">
+										<li>
+											<article>
+												<header>
+													<h2>分类</h2>
+													{% getcategory as categoryslist %}
+													{% for category in categoryslist %}
+													<h3><a href="{% url 'blog:category' category.pk %}">{{ category.name }} <span class="post-count">({{ category.numblogs }})</span></a></h3>
+													{% empty %}
+													暂无分类！
+													{% endfor %}
+												</header>
+											</article>
+										</li>
+								</ul>
+							</section>
+
+						<!-- Tags -->
+							<div class="widget widget-tag-cloud">
+			                   <h2>标签云</h2>
+			                   {% gettags as tagslist %}
+			                    <ul>
+			                    	{% for tag in tagslist %}
+			                        <li>
+			                            <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+			                        </li>
+			                        {% empty %}
+			                        暂无标签！
+			                        {% endfor%}
+			                    </ul>
+			                </div>
+
+					</section>
+{% endblock main %}
+							

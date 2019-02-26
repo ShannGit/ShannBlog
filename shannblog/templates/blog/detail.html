@@ -9,7 +9,17 @@
 								<header>
 									<div class="title">
 										<h2>{{ post.caption }}</h2>
-										<p><a href="{% url 'blog:category' post.category.pk %}">{{ post.category }}</a></p>
+										<!-- <p><a href="{% url 'blog:category' post.category.pk %}">{{ post.category }}</a></p> -->
+										<div class="widget widget-tag-cloud">
+					                    <ul>
+					                    	{% for tag in post.tag.all %}
+					                        <li>
+					                            <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+					                        </li>
+					                        {% empty %}
+					                        {% endfor%}
+					                    </ul>
+			              		  </div>
 									</div>
 									<div class="meta">
 										<time class="published" datetime="2015-10-18">{{ post.creattime|date:"Y-m-d H:i" }}</time>
@@ -20,6 +30,13 @@
 								<section>
 									<p>{{ post.content|safe }}</p>
 								</section>
+								<footer>
+									<ul class="stats">
+										<li><a href="{% url 'blog:category' post.category.pk %}">{{ post.category }}</a></li>
+										<li>{{ post.get_readnum }} 阅读</li>
+										<li><a href="#" class="icon fa-comment">{{ post.comments_set.count }}</a></li>
+									</ul>
+								</footer>
 						</article>
 
 						<article class="post">

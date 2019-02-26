@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'z-vd(sn8y$#cq4f^%x4+9s$pwczwl#(xgbqdm1*=k34#o%ga_v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if socket.gethostbyname(socket.gethostname())[:3]=='127':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.shann.vip']
 
@@ -37,8 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
+    'ckeditor_uploader',
+    'haystack',
     'blog',
     'comments',
+    'readcount',
+    
 ]
 
 MIDDLEWARE = [
@@ -109,9 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -125,3 +134,61 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#配置ckeditor
+CKEDITOR_UPLOAD_PATH = 'upload/'
+
+HAYSTACK_CONNECTIONS = {
+    'default':{
+        'ENGINE':'blog.whoosh_cn_backend.WhooshEngine',
+        'PATH':os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': True,
+#     'formatters': {#日志格式 
+#        'standard': {
+#             'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'}  
+#     },
+#     'filters': {#过滤器
+#     },
+#     'handlers': {#处理器
+#         'null': {
+#             'level': 'DEBUG',
+#             'class': 'logging.NullHandler',
+#         },
+#         'debug': {#输出到文件
+#             'level':'DEBUG',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, "log",'debug.log'),#日志输出文件
+#             'maxBytes':1024*1024*5,#文件大小 
+#             'backupCount': 5,#备份份数
+#             'formatter':'standard',#使用哪种formatters日志格式
+#         },
+#         'console':{#输出到控制台
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'standard',
+#         },
+#     },
+#     'loggers': {#logging管理器
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': False 
+#         },
+#         'django.request': {
+#             'handlers': ['debug'],
+#             'level': 'ERROR',
+#             'propagate': True,
+#         },
+#     } 
+# }

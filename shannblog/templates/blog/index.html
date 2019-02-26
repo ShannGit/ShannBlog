@@ -4,30 +4,41 @@
 
 {% block main %}
 					<div id="main">
-
+						{% if errormsg %}
+						<p>{{ errormsg }}</p>
+						{% endif %}
 						<!-- Post -->
 						{% for post in postlist %}
 							<article class="post">
 								<header>
 									<div class="title">
 										<h2><a href="{{ post.get_absolute_url }}">{{ post.caption }}</a></h2>
-										<p>{{ post.category }}</p>
+										<div class="widget widget-tag-cloud">
+						                    <ul>
+						                    	{% for tag in post.tag.all %}
+						                        <li>
+						                            <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
+						                        </li>
+						                        {% empty %}
+						                        {% endfor%}
+						                    </ul>
+						                </div>
 									</div>
 									<div class="meta">
 										<time class="published" datetime="{{ post.creattime|date:'Y-m-d H:i' }}">{{ post.creattime|date:"Y-m-d H:i" }}</time>
 										<a href="#" class="author"><span class="name">{{ post.author }}</span><img src="{% static 'blog/images/logo.jpg' %}" alt="" /></a>
 									</div>
 								</header>
-								<a href="{{ post.get_absolute_url }}" class="image featured"><img src="{% static 'blog/images/pic01.jpg' %}" alt="" /></a>
-								<p>{{ post.content }}</p>
+								<a href="{{ post.get_absolute_url }}" class="image featured"><img src="{% static 'blog/images/pic03.jpg' %}" alt="" /></a>
+								<p>{{ post.excerpt }}</p>
 								<footer>
 									<ul class="actions">
 										<li><a href="{{ post.get_absolute_url }}" class="button big">Continue Reading</a></li>
 									</ul>
 									<ul class="stats">
 										<li><a href="{% url 'blog:category' post.category.pk %}">{{ post.category }}</a></li>
-										<li><a href="#" class="icon fa-heart">28</a></li>
-										<li><a href="#" class="icon fa-comment">128</a></li>
+										<li>{{ post.get_readnum }} 阅读</li>
+										<li><a href="#" class="icon fa-comment">{{ post.comments_set.count }}</a></li>
 									</ul>
 								</footer>
 							</article>
@@ -36,12 +47,22 @@
 						{% endfor %}
 
 						<!-- Pagination -->
+							{% if is_paginated %}
 							<ul class="actions pagination">
-								<li><a href="" class="disabled button big previous">Previous Page</a></li>
-								<li><a href="#" class="button big next">Next Page</a></li>
+								{% if page_obj.has_previous %}
+								<li><a href="?page={{ page_obj.previous_page_number }}" class="button big previous">上一页</a></li>
+								{% else %}
+								<li><a href="#" class="disabled button big previous">上一页</a></li>
+								{% endif %}
+								{% if page_obj.has_next %}
+								<li><a href="?page={{ page_obj.next_page_number }}" class="button big next">下一页</a></li>
+								{% else %}
+								<li><a href="#" class="disabled button big next">下一页</a></li>		
+								{% endif %}
 							</ul>
+							{% endif %}
 
-					</div>
+						</div>
 
 				<!-- Sidebar -->
 					<section id="sidebar">
@@ -57,7 +78,7 @@
                        			 </div>
 								<header>
 									<h2>Shann</h2>
-									<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. </p>
+									<p>God said, Let there be light: and there was light.</p>
 								</header>
 							</section>
 
@@ -72,9 +93,9 @@
 												<header>
 													<h3><a href="{% url 'blog:detail' blog.pk %}">{{ blog.caption }}</a></h3>
 													<time class="published" datetime="2015-10-20">{{ blog.creattime|date:"Y-m-d H:i" }}</time>
-													<a href="#" class="author"><img src="{% static 'blog/images/avatar.jpg' %}" alt="" /></a>
+													<a href="#" class="author"><img src="{% static 'blog/images/logo.jpg' %}" alt="" /></a>
 												</header>
-												<a href="{% url 'blog:detail' blog.pk %}" class="image"><img src="{% static 'blog/images/pic01.jpg' %}" alt="" /></a>
+												<a href="{% url 'blog:detail' blog.pk %}" class="image"><img src="{% static 'blog/images/pic03.jpg' %}" alt="" /></a>
 											</article>
 										{% empty %}
 										暂无文章！
@@ -107,7 +128,7 @@
 													<h2>分类</h2>
 													{% getcategory as categoryslist %}
 													{% for category in categoryslist %}
-													<h3><a href="{% url 'blog:category' category.pk %}">{{ category.name }}</a></h3>
+													<h3><a href="{% url 'blog:category' category.pk %}">{{ category.name }} <span class="post-count">({{ category.numblogs }})</span></a></h3>
 													{% empty %}
 													暂无分类！
 													{% endfor %}
@@ -120,31 +141,15 @@
 						<!-- Tags -->
 							<div class="widget widget-tag-cloud">
 			                   <h2>标签云</h2>
+			                   {% gettags as tagslist %}
 			                    <ul>
+			                    	{% for tag in tagslist %}
 			                        <li>
-			                            <a href="#">python</a>
+			                            <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}</a>
 			                        </li>
-			                        <li>
-			                            <a href="#">asdasd</a>
-			                        </li>
-			                        <li>
-			                            <a href="#">asdasfff</a>
-			                        </li>
-			                        <li>
-			                            <a href="#">ffeefefef</a>
-			                        </li>
-			                        <li>
-			                            <a href="#">gegegegeg</a>
-			                        </li>
-			                         <li>
-			                            <a href="#">asdasfff</a>
-			                        </li>
-			                        <li>
-			                            <a href="#">ffeefefef</a>
-			                        </li>
-			                        <li>
-			                            <a href="#">gegegegeg</a>
-			                        </li>
+			                        {% empty %}
+			                        暂无标签！
+			                        {% endfor%}
 			                    </ul>
 			                </div>
 

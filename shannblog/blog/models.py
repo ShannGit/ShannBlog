@@ -1,5 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.html import strip_tags
+import markdown
+from ckeditor_uploader.fields import RichTextUploadingField
+from readcount.models import ReadNumExpandMethod
 
 # Create your models here.
 
@@ -29,11 +33,11 @@ class Category(models.Model):
 	def __str__(self):
 		return self.name
 		
-class Blog(models.Model):
+class Blog(models.Model, ReadNumExpandMethod):
 	"""docstring for Blog"""
 	#博客模型
 	caption = models.CharField(max_length=50)
-	content = models.TextField()
+	content = RichTextUploadingField()
 	excerpt = models.CharField(max_length=50, blank=True)
 	creattime = models.DateTimeField(auto_now_add=True)	#日期，新增自动写入
 	modifiedtime = models.DateTimeField(auto_now=True)	#日期，修改自动更新
@@ -46,3 +50,15 @@ class Blog(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('blog:detail', kwargs={'pk':self.pk})
+
+	def save(self, *args, **kwargs):
+		if not self.excerpt:
+			md = markdown.Markdown(extensions=[
+				 'markdown.extensions.extra',
+				 'markdown.extensions.codehilite',
+				 ])
+			self.excerpt = strip_tags(md.convert(self.content))[:50]
+		super(Blog, self).save(*args, **kwargs)
+		
+	class Meta:
+		ordering = ['-creattime']

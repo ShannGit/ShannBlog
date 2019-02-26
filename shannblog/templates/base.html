@@ -11,7 +11,11 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="{% static 'blog/assets/css/ie9.css' %}"><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="{% static 'blog/assets/css/ie8.css' %}"><![endif]-->
 		<link rel="stylesheet" href="{% static 'blog/assets/highlights/fruity.css' %}">
-
+		<style>
+        span.highlighted {
+            color: red;
+        }
+    	</style>
 	</head>
 	<body>
 
@@ -45,8 +49,8 @@
 								<header>
 									<h2>Shann</h2>
 								</header>
-								<form class="search" method="get" action="#">
-									<input type="text" name="query" placeholder="Search" />
+								<form class="search" method="get" action="{% url 'haystack_search' %}">
+									<input type="text" name="q" placeholder="Search" />
 									<input type="submit" class="button big fit" value="Search">
 								</form>
 							</section>
