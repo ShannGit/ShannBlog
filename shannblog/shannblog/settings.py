@@ -142,6 +142,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #配置ckeditor
 CKEDITOR_UPLOAD_PATH = 'upload/'
 
+CKEDITOR_CONFIGS = {
+
+     'default':
+     {'extraPlugins': ','.join(['html5audio']),
+     'toolbar': 'full'},
+
+}
+
 HAYSTACK_CONNECTIONS = {
     'default':{
         'ENGINE':'blog.whoosh_cn_backend.WhooshEngine',
