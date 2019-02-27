@@ -145,8 +145,7 @@ CKEDITOR_UPLOAD_PATH = 'upload/'
 CKEDITOR_CONFIGS = {
 
      'default':
-     {'extraPlugins': ','.join(['html5audio']),
-     'toolbar': 'full'},
+     {'toolbar': 'full'},
 
 }
 
